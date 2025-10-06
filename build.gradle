@@ -1,0 +1,146 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.automation'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(23)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Selenium
+    implementation 'org.seleniumhq.selenium:selenium-java:4.27.0'
+    implementation 'io.github.bonigarcia:webdrivermanager:5.9.2'
+
+    // TestNG
+    testImplementation 'org.testng:testng:7.10.2'
+
+    // JavaFaker (with exclusions to avoid conflicts)
+    implementation('com.github.javafaker:javafaker:1.0.2') {
+        exclude group: 'org.yaml', module: 'snakeyaml'
+        exclude group: 'com.fasterxml.jackson.core'
+        exclude group: 'org.apache.commons', module: 'commons-lang3'
+    }
+
+    // Extent Reports
+    implementation 'com.aventstack:extentreports:5.1.2'
+
+    // Apache POI for Excel
+    implementation 'org.apache.poi:poi:5.3.0'
+    implementation 'org.apache.poi:poi-ooxml:5.3.0'
+
+    // JSON Processing
+    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    // Logging
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+    implementation 'ch.qos.logback:logback-classic:1.4.14'
+    implementation 'ch.qos.logback:logback-core:1.4.14'
+
+    // Lombok (Optional)
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    // Apache Commons
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation 'commons-io:commons-io:2.18.0'
+}
+
+test {
+    useTestNG() {
+        // Use different suite files based on system property
+        def suiteFile = System.getProperty('suite', 'testng')
+        suites "src/test/resources/${suiteFile}.xml"
+
+        // Parallel execution
+        parallel = 'methods'
+        threadCount = 3
+
+        // Generate TestNG reports
+        useDefaultListeners = true
+
+        // System properties
+        systemProperty 'browser', System.getProperty('browser', 'chrome')
+        systemProperty 'environment', System.getProperty('environment', 'qa')
+        systemProperty 'headless', System.getProperty('headless', 'false')
+    }
+
+    // Test execution settings
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+
+
+
+    // Show test results
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+        showStandardStreams = false
+    }
+
+    // Generate reports
+    reports {
+        html.required = true
+        junitXml.required = true
+    }
+}
+
+// Custom task for smoke tests
+task smokeTest(type: Test) {
+    useTestNG() {
+        suites 'src/test/resources/testng-smoke.xml'
+    }
+    systemProperty 'suite', 'smoke'
+}
+
+// Custom task for regression tests
+task regressionTest(type: Test) {
+    useTestNG() {
+        suites 'src/test/resources/testng-regression.xml'
+    }
+    systemProperty 'suite', 'regression'
+}
+
+// Custom task to clean reports
+task cleanReports(type: Delete) {
+    delete 'reports'
+}
+
+// Clean reports before running tests
+test.dependsOn cleanReports
+smokeTest.dependsOn cleanReports
+regressionTest.dependsOn cleanReports
+
+// Exclude Spring Boot's default test configuration
+tasks.named('test') {
+    exclude '**/ApplicationTests.class'
+}
+
+// Disable Spring Boot's executable jar creation
+jar {
+    enabled = true
+}
+
+bootJar {
+    enabled = false
+}
+
+// Ensure compatibility with Gradle 9
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['--release', '23']
+}

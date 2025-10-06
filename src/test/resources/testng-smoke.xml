@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="ParaBank Smoke Test Suite" verbose="2" parallel="classes" thread-count="2">
+
+    <!-- Listener for logging, reporting, screenshots -->
+    <listeners>
+        <listener class-name="com.automation.listeners.TestListener"/>
+    </listeners>
+
+    <test name="Smoke Tests">
+        <classes>
+            <class name="com.automation.tests.LoginTests">
+<!--                <include name="testSuccessfulLogin"/>-->
+                <include name="testLoginWithInvalidCredentials"/>
+<!--                <include name="testLoginWithEmptyUsername"/>-->
+<!--                <include name="testLoginWithEmptyPassword"/>-->
+<!--                <include name="testLoginPageDisplay"/>-->
+<!--                <include name="testLogout"/>-->
+            </class>
+
+            <class name="com.automation.tests.AccountTests">
+                <methods>
+                    <include name="testAccountsOverviewDisplay"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

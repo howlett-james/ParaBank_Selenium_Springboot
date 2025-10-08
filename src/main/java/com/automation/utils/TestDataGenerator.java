@@ -2,6 +2,8 @@ package com.automation.utils;
 
 import com.github.javafaker.Faker;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +35,7 @@ public class TestDataGenerator {
      * Generate unique username with timestamp
      */
     public static String generateUniqueUsername() {
-        return faker.name().username().replaceAll("[^a-zA-Z0-9]", "") + System.currentTimeMillis();
+        return faker.name().username().replaceAll("[^a-zA-Z0-9]", "")+ "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
     }
 
     /**

@@ -9,15 +9,7 @@
 
     <test name="Smoke Tests">
         <classes>
-            <class name="com.automation.tests.LoginTests">
-<!--                <include name="testSuccessfulLogin"/>-->
-                <include name="testLoginWithInvalidCredentials"/>
-<!--                <include name="testLoginWithEmptyUsername"/>-->
-<!--                <include name="testLoginWithEmptyPassword"/>-->
-<!--                <include name="testLoginPageDisplay"/>-->
-<!--                <include name="testLogout"/>-->
-            </class>
-
+            <class name="com.automation.tests.LoginTests"/>
             <class name="com.automation.tests.AccountTests">
                 <methods>
                     <include name="testAccountsOverviewDisplay"/>

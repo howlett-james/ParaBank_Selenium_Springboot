@@ -5,14 +5,14 @@
     <listeners>
         <listener class-name="com.automation.listeners.TestListener"/>
         <listener class-name="com.automation.listeners.ExtentReportListener"/>
-        <listener class-name="com.automation.listeners.RetryAnalyzer"/>
-        <listener class-name="com.automation.listeners.FailedTestCollector"/>
+<!--        <listener class-name="com.automation.listeners.RetryAnalyzer"/>-->
+<!--        <listener class-name="com.automation.listeners.FailedTestCollector"/>-->
     </listeners>
 
     <test name="ParaBank Tests">
         <classes>
-<!--            <class name="com.automation.tests.LoginTests"/>-->
-            <class name="com.automation.tests.HomeTests"/>
+            <class name="com.automation.tests.LoginTests"/>
+<!--            <class name="com.automation.tests.HomeTests"/>-->
 <!--            <class name="com.automation.tests.AccountTests"/>-->
 <!--            <class name="com.automation.tests.TransferFundsTests"/>-->
 <!--            <class name="com.automation.tests.BillPayTests"/>-->

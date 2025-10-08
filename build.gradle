@@ -17,6 +17,11 @@ repositories {
     mavenCentral()
 }
 
+def appProps = new Properties()
+file("src/main/resources/application.properties").withInputStream {
+    appProps.load(it)
+}
+
 dependencies {
     // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter'
@@ -64,41 +69,31 @@ dependencies {
 
 test {
     useTestNG() {
-        // Use different suite files based on system property
         def suiteFile = System.getProperty('suite', 'testng')
         suites "src/test/resources/${suiteFile}.xml"
-
-        // Parallel execution
         parallel = 'methods'
         threadCount = 3
-
-        // Generate TestNG reports
         useDefaultListeners = true
-
-        // System properties
-        systemProperty 'browser', System.getProperty('browser', 'chrome')
-        systemProperty 'environment', System.getProperty('environment', 'qa')
-        systemProperty 'headless', System.getProperty('headless', 'false')
     }
 
-    // Test execution settings
+    // Pass headless, browser, environment from application.properties
+    systemProperty 'headless', appProps['headless']
+    systemProperty 'browser', appProps['browser']
+
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 
-
-
-    // Show test results
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
         showStandardStreams = false
     }
 
-    // Generate reports
     reports {
         html.required = true
         junitXml.required = true
     }
 }
+
 
 // Custom task for smoke tests
 task smokeTest(type: Test) {
@@ -106,6 +101,8 @@ task smokeTest(type: Test) {
         suites 'src/test/resources/testng-smoke.xml'
     }
     systemProperty 'suite', 'smoke'
+    systemProperty 'headless', appProps['headless']
+    systemProperty 'browser', appProps['browser']
 }
 
 // Custom task for regression tests

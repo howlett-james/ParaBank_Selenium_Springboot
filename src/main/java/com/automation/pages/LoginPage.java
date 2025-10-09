@@ -34,11 +34,11 @@ public class LoginPage extends BasePage {
     }
 
     public void enterUsername(String username) {
-        sendKeys(usernameField, username);
+        sendKeys(usernameField, username != null ? username : "");
     }
 
     public void enterPassword(String password) {
-        sendKeys(passwordField, password);
+        sendKeys(passwordField, password != null ? password : "");
     }
 
     public AccountsOverviewPage clickLoginButton() {

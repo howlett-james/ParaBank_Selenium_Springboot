@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.*;
 
+import java.io.File;
 import java.util.Map;
 
 @SpringBootTest(classes = WebDriverConfig.class)
@@ -34,13 +35,13 @@ public class BaseTest extends AbstractTestNGSpringContextTests {
     private String username;
     private String password;
 
+    // ------------------ WebDriver Setup ------------------
+
     @BeforeMethod(alwaysRun = true)
     public void setUp() {
         // Get WebDriver from Spring Context
         driver = applicationContext.getBean(WebDriver.class);
         driver.get(baseUrl);
-
-        loadCredentials(); // load before tests
     }
 
     @AfterMethod(alwaysRun = true)
@@ -59,19 +60,38 @@ public class BaseTest extends AbstractTestNGSpringContextTests {
         return driver;
     }
 
-    // ---------- Credential Handling ----------
+    // ------------------ Credential Handling ------------------
+    /**
+     * Call this explicitly **only in login tests**, after registration.
+     */
+    protected void loadCredentials() {
+        try {
+            // Read directly from file path
+            File file = new File("src/test/resources/testdata/testdata.json");
 
-    private void loadCredentials() {
-        Map<String, Object> latestUser = JsonReaderUtil.getLatestRecord("src/test/resources/testdata.json");
+            if (!file.exists() || file.length() == 0) {
+                username = null;
+                password = null;
+                System.out.println("[INFO] No registered user found. Registration test should run first.");
+                return;
+            }
 
-        if (latestUser != null && latestUser.containsKey("username") && latestUser.containsKey("password")) {
-            username = latestUser.get("username").toString();
-            password = latestUser.get("password").toString();
-            System.out.println("[INFO] Loaded credentials from testdata.json: " + username);
-        } else {
-            username = defaultUsername;
-            password = defaultPassword;
-            System.out.println("[INFO] Using fallback credentials from application.properties");
+            Map<String, Object> latestUser = JsonReaderUtil.getLatestRecord(file);
+
+            if (latestUser != null && latestUser.containsKey("username") && latestUser.containsKey("password")) {
+                username = latestUser.get("username").toString();
+                password = latestUser.get("password").toString();
+                System.out.println("[INFO] Loaded credentials from testdata.json: " + username);
+            } else {
+                username = null;
+                password = null;
+                System.out.println("[INFO] No registered user found. Registration test should run first.");
+            }
+
+        } catch (Exception e) {
+            username = null;
+            password = null;
+            System.err.println("[ERROR] Failed to load credentials: " + e.getMessage());
         }
     }
 

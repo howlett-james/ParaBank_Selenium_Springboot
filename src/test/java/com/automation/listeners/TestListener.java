@@ -38,11 +38,11 @@ public class TestListener implements ITestListener {
                     .invoke(testClass);
 
             if (driver != null) {
-                String screenshotPath = ScreenshotUtil.captureScreenshot(
+                String screenshotPath = ScreenshotUtil.captureFullPageScreenshot(
                         driver,
                         result.getMethod().getMethodName()
                 );
-                logger.info("Screenshot captured: " + screenshotPath);
+                logger.info("Full-page screenshot captured: " + screenshotPath);
             }
         } catch (Exception e) {
             logger.error("Failed to capture screenshot: " + e.getMessage());

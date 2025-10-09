@@ -2,8 +2,6 @@ package com.automation.utils;
 
 import com.github.javafaker.Faker;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,11 +15,11 @@ public class TestDataGenerator {
     public static Map<String, String> generateRegistrationData() {
         Map<String, String> data = new HashMap<>();
 
-        data.put("firstName", faker.name().firstName());
-        data.put("lastName", faker.name().lastName());
-        data.put("address", faker.address().streetAddress());
-        data.put("city", faker.address().city());
-        data.put("state", faker.address().stateAbbr());
+        data.put("firstName", generateFirstName());
+        data.put("lastName", generateLastName());
+        data.put("address", generateStreetAddress());
+        data.put("city", generateCity());
+        data.put("state", generateZipCode());
         data.put("zipCode", generateZipCode());
         data.put("phone", generatePhoneNumber());
         data.put("ssn", generateSSN());
@@ -29,20 +27,6 @@ public class TestDataGenerator {
         data.put("password", generatePassword());
 
         return data;
-    }
-
-    /**
-     * Generate unique username with timestamp
-     */
-    public static String generateUniqueUsername() {
-        return faker.name().username().replaceAll("[^a-zA-Z0-9]", "")+ "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
-    }
-
-    /**
-     * Generate strong password
-     */
-    public static String generatePassword() {
-        return faker.internet().password(8, 16, true, true, true);
     }
 
     /**
@@ -77,7 +61,7 @@ public class TestDataGenerator {
      * Generate 5-digit zip code
      */
     public static String generateZipCode() {
-        return faker.numerify("#####");
+        return faker.numerify("######");
     }
 
     /**
@@ -90,8 +74,8 @@ public class TestDataGenerator {
     /**
      * Generate full address
      */
-    public static String generateFullAddress() {
-        return faker.address().fullAddress();
+    public static String generateStreetAddress() {
+        return faker.address().streetAddress();
     }
 
     /**
@@ -120,5 +104,18 @@ public class TestDataGenerator {
      */
     public static String generateState() {
         return faker.address().stateAbbr();
+    }
+    /**
+     * Generate unique username with timestamp
+     */
+    public static String generateUniqueUsername() {
+        return faker.name().username() +"@"+ faker.numerify("#######") +"$";
+    }
+
+    /**
+     * Generate strong password
+     */
+    public static String generatePassword() {
+        return faker.internet().password(8, 16, true, true, true);
     }
 }

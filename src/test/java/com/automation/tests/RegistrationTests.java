@@ -3,18 +3,19 @@ package com.automation.tests;
 import com.automation.pages.LoginPage;
 import com.automation.pages.RegisterPage;
 import com.automation.utils.TestDataGenerator;
+import com.automation.utils.TestDataWriter;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Map;
 
-public class HomeTests extends BaseTest {
+public class RegistrationTests extends BaseTest {
 
     private LoginPage loginPage;
     private RegisterPage registerPage;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void initPages() {
         loginPage = new LoginPage(driver);
         registerPage = loginPage.clickRegisterLink();
@@ -47,13 +48,20 @@ public class HomeTests extends BaseTest {
 
         registerPage.clickRegisterButton();
 
+        if (registerPage.isRegistrationSuccessful()) {
+            TestDataWriter.appendUserData(
+                    userData.get("username"),
+                    userData.get("password")
+            );
+        }
+
         Assert.assertTrue(registerPage.isRegistrationSuccessful(),
                 "Registration should be successful");
         Assert.assertTrue(registerPage.getSuccessMessage().contains("successfully"),
                 "Success message should be displayed");
     }
 
-    @Test(priority = 3, description = "Verify registration with all mandatory fields")
+@Test(priority = 3, description = "Verify registration with all mandatory fields")
     public void testRegistrationWithMandatoryFields() {
         Map<String, String> userData = TestDataGenerator.generateRegistrationData();
 

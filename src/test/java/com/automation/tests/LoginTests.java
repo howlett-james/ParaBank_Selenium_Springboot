@@ -5,29 +5,28 @@ import com.automation.pages.LoginPage;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.TestPropertySource;
 
-@TestPropertySource("classpath:application.properties")
+import java.lang.reflect.Method;
+
 public class LoginTests extends BaseTest {
 
     private LoginPage loginPage;
     private AccountsOverviewPage accountsPage;
 
-    @Value("${test.username}")
-    private String username;
-
-    @Value("${test.password}")
-    private String password;
-
-    @BeforeMethod
-    public void initPages() {
+    @BeforeMethod(alwaysRun = true)
+    public void initPages(Method method) {
         loginPage = new LoginPage(driver);
+
+        loadCredentials();
     }
 
-    @Test(priority = 1, description = "Verify successful login with valid credentials" )
+    @Test(priority = 1, description = "Verify successful login with valid credentials")
     public void testSuccessfulLogin() {
-        accountsPage = loginPage.login(username, password);
+        if (getUsername() == null || getPassword() == null) {
+            throw new RuntimeException("No registered user found. Run registration first.");
+        }
+
+        accountsPage = loginPage.login(getUsername(), getPassword());
 
         Assert.assertTrue(accountsPage.isAccountsOverviewPageDisplayed(),
                 "Accounts Overview page should be displayed after successful login");
@@ -44,15 +43,14 @@ public class LoginTests extends BaseTest {
 
     @Test(priority = 3, description = "Verify login with empty username")
     public void testLoginWithEmptyUsername() {
-        loginPage.login("", password);
-
+        loginPage.login("", getPassword());
         Assert.assertTrue(loginPage.isErrorMessageDisplayed(),
                 "Error message should be displayed for empty username");
     }
 
     @Test(priority = 4, description = "Verify login with empty password")
     public void testLoginWithEmptyPassword() {
-        loginPage.login(username, "");
+        loginPage.login(getUsername(), "");
         Assert.assertTrue(loginPage.isErrorMessageDisplayed(),
                 "Error message should be displayed for empty password");
     }
@@ -67,7 +65,11 @@ public class LoginTests extends BaseTest {
 
     @Test(priority = 6, description = "Verify successful logout")
     public void testLogout() {
-        accountsPage = loginPage.login(username, password);
+        if (getUsername() == null || getPassword() == null) {
+            throw new RuntimeException("No registered user found. Run registration first.");
+        }
+
+        accountsPage = loginPage.login(getUsername(), getPassword());
         Assert.assertTrue(accountsPage.isLoggedIn(), "User should be logged in");
 
         accountsPage.logout();

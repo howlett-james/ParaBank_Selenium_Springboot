@@ -10,26 +10,26 @@ import java.util.Map;
 
 public class JsonReaderUtil {
 
-    public static Map<String, Object> getLatestRecord(String filePath) {
+    public static Map<String, Object> getLatestRecord(File file) {
         Map<String, Object> latestRecordMap = null;
 
         try {
+            if (!file.exists() || file.length() == 0) {
+                return null;
+            }
+
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode rootNode = mapper.readTree(new File(filePath));
+            JsonNode rootNode = mapper.readTree(file);
 
-            // Assuming the JSON has only one array (top-level) for test data
-            Iterator<JsonNode> elements = rootNode.elements();
+            if (!rootNode.isArray() || rootNode.size() == 0) {
+                return null;
+            }
+
             JsonNode latestRecord = null;
-
-            while (elements.hasNext()) {
-                JsonNode arrayNode = elements.next();
-                if (arrayNode.isArray()) {
-                    for (JsonNode record : arrayNode) {
-                        if (latestRecord == null ||
-                                record.get("id").asLong() > latestRecord.get("id").asLong()) {
-                            latestRecord = record;
-                        }
-                    }
+            for (JsonNode record : rootNode) {
+                if (latestRecord == null ||
+                        record.get("id").asLong() > latestRecord.get("id").asLong()) {
+                    latestRecord = record;
                 }
             }
 

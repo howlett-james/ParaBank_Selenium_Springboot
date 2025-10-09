@@ -1,10 +1,11 @@
 package com.automation.utils;
 
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +14,7 @@ public class ScreenshotUtil {
 
     private static final String SCREENSHOT_DIR = "reports/screenshots/";
 
-    public static String captureScreenshot(WebDriver driver, String screenshotName) {
+    public static String captureFullPageScreenshot(WebDriver driver, String screenshotName) {
         try {
             File directory = new File(SCREENSHOT_DIR);
             if (!directory.exists()) {
@@ -21,24 +22,19 @@ public class ScreenshotUtil {
             }
 
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String destination = SCREENSHOT_DIR + screenshotName + "_full_" + timestamp + ".png";
 
-            // Capture screenshot
-            TakesScreenshot ts = (TakesScreenshot) driver;
-            File source = ts.getScreenshotAs(OutputType.FILE);
+            // Use AShot with viewportPasting to capture full page
+            Screenshot screenshot = new AShot()
+                    .shootingStrategy(ShootingStrategies.viewportPasting(100))
+                    .takeScreenshot(driver);
 
-            String destination = SCREENSHOT_DIR + screenshotName + "_" + timestamp + ".png";
-            File finalDestination = new File(destination);
+            ImageIO.write(screenshot.getImage(), "PNG", new File(destination));
 
-            FileUtils.copyFile(source, finalDestination);
-
-            return finalDestination.getAbsolutePath();
+            return new File(destination).getAbsolutePath();
         } catch (Exception e) {
-            System.out.println("Exception while capturing screenshot: " + e.getMessage());
+            System.out.println("Exception while capturing full-page screenshot: " + e.getMessage());
             return null;
         }
-    }
-
-    public static String captureScreenshot(WebDriver driver) {
-        return captureScreenshot(driver, "screenshot");
     }
 }

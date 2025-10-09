@@ -65,6 +65,7 @@ dependencies {
     // Apache Commons
     implementation 'org.apache.commons:commons-lang3:3.17.0'
     implementation 'commons-io:commons-io:2.18.0'
+    implementation 'ru.yandex.qatools.ashot:ashot:1.5.4'
 }
 
 test {

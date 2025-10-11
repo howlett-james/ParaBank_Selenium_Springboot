@@ -1,6 +1,7 @@
 package com.automation.tests;
 
 import com.automation.config.WebDriverConfig;
+import com.automation.constants.FrameworkConstants;
 import com.automation.listeners.TestListener;
 import com.automation.utils.JsonReaderUtil;
 import org.openqa.selenium.WebDriver;
@@ -35,11 +36,8 @@ public class BaseTest extends AbstractTestNGSpringContextTests {
     private String username;
     private String password;
 
-    // ------------------ WebDriver Setup ------------------
-
     @BeforeMethod(alwaysRun = true)
     public void setUp() {
-        // Get WebDriver from Spring Context
         driver = applicationContext.getBean(WebDriver.class);
         driver.get(baseUrl);
     }
@@ -60,14 +58,9 @@ public class BaseTest extends AbstractTestNGSpringContextTests {
         return driver;
     }
 
-    // ------------------ Credential Handling ------------------
-    /**
-     * Call this explicitly **only in login tests**, after registration.
-     */
     protected void loadCredentials() {
         try {
-            // Read directly from file path
-            File file = new File("src/test/resources/testdata/testdata.json");
+            File file = new File(FrameworkConstants.TESTDATA_FILE);
 
             if (!file.exists() || file.length() == 0) {
                 username = null;

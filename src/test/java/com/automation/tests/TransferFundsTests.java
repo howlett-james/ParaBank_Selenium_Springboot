@@ -40,7 +40,6 @@ public class TransferFundsTests extends BaseTest {
         transferPage.enterAmount("0");
         transferPage.clickTransferButton();
 
-        // Verify appropriate error or behavior
         Assert.assertFalse(transferPage.isTransferSuccessful(),
                 "Transfer with zero amount should not succeed");
     }

@@ -1,5 +1,6 @@
 package com.automation.utils;
 
+import com.automation.constants.FrameworkConstants;
 import org.openqa.selenium.WebDriver;
 import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
@@ -12,7 +13,7 @@ import java.util.Date;
 
 public class ScreenshotUtil {
 
-    private static final String SCREENSHOT_DIR = "reports/screenshots/";
+    private static final String SCREENSHOT_DIR = FrameworkConstants.SCREENSHOTS_DIR;
 
     public static String captureFullPageScreenshot(WebDriver driver, String screenshotName) {
         try {

@@ -30,7 +30,6 @@ public class TestListener implements ITestListener {
         logger.error("TEST FAILED: " + result.getMethod().getMethodName());
         logger.error("Failure Reason: " + result.getThrowable());
 
-        // Capture screenshot on failure
         Object testClass = result.getInstance();
         try {
             WebDriver driver = (WebDriver) testClass.getClass()

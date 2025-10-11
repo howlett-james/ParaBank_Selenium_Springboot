@@ -15,7 +15,6 @@ public class AccountTests extends BaseTest {
     @BeforeMethod
     public void initPages() {
         loginPage = new LoginPage(driver);
-        // Login before each test
         accountsPage = loginPage.login("john", "demo");
     }
 

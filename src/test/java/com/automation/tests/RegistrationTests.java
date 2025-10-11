@@ -89,7 +89,7 @@ public class RegistrationTests extends BaseTest {
         Map<String, String> userData = TestDataGenerator.generateRegistrationData();
 
         registerPage.fillRegistrationForm(
-                "",  // Empty first name
+                "",
                 userData.get("lastName"),
                 userData.get("address"),
                 userData.get("city"),
@@ -114,7 +114,7 @@ public class RegistrationTests extends BaseTest {
 
         registerPage.fillRegistrationForm(
                 userData.get("firstName"),
-                "",  // Empty last name
+                "",
                 userData.get("address"),
                 userData.get("city"),
                 userData.get("state"),
@@ -139,7 +139,7 @@ public class RegistrationTests extends BaseTest {
         registerPage.fillRegistrationForm(
                 userData.get("firstName"),
                 userData.get("lastName"),
-                "",  // Empty address
+                "",
                 userData.get("city"),
                 userData.get("state"),
                 userData.get("zipCode"),
@@ -169,7 +169,7 @@ public class RegistrationTests extends BaseTest {
                 userData.get("zipCode"),
                 userData.get("phone"),
                 userData.get("ssn"),
-                "",  // Empty username
+                "",
                 userData.get("password")
         );
 
@@ -194,7 +194,7 @@ public class RegistrationTests extends BaseTest {
                 userData.get("phone"),
                 userData.get("ssn"),
                 userData.get("username"),
-                ""  // Empty password
+                ""
         );
 
         registerPage.clickRegisterButton();

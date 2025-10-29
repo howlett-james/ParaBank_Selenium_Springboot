@@ -50,7 +50,7 @@ public class RegisterPage extends BasePage {
     @FindBy(css = "#rightPanel > p")
     private WebElement successMessage;
 
-    @FindBy(xpath = "//span[@class='error']")
+    @FindBy(css = "#customer.username.errors")
     private WebElement errorMessage;
 
     public RegisterPage(WebDriver driver) {
@@ -79,7 +79,14 @@ public class RegisterPage extends BasePage {
     }
 
     public boolean isRegistrationSuccessful() {
-        return isElementDisplayed(successMessage);
+        if (getPageTitle().contains("Customer Created")) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isRegistrationUnsuccessful(){
+        return !(isElementDisplayed(errorMessage) && getText(errorMessage).contains("already exists"));
     }
 
     public String getSuccessMessage() {

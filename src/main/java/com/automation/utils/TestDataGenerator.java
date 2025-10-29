@@ -19,7 +19,7 @@ public class TestDataGenerator {
         data.put("lastName", generateLastName());
         data.put("address", generateStreetAddress());
         data.put("city", generateCity());
-        data.put("state", generateZipCode());
+        data.put("state", generateState());
         data.put("zipCode", generateZipCode());
         data.put("phone", generatePhoneNumber());
         data.put("ssn", generateSSN());

@@ -7,11 +7,13 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 public class JsonReaderUtil {
 
-    public static Map<String, Object> getLatestRecord(File file) {
+    public static Map<String, Object> getRandomRecord(File file) {
         Map<String, Object> latestRecordMap = null;
+        Random random = new Random();
 
         try {
             if (!file.exists() || file.length() == 0) {
@@ -25,21 +27,14 @@ public class JsonReaderUtil {
                 return null;
             }
 
-            JsonNode latestRecord = null;
-            for (JsonNode record : rootNode) {
-                if (latestRecord == null ||
-                        record.get("id").asLong() > latestRecord.get("id").asLong()) {
-                    latestRecord = record;
-                }
-            }
+            int randomIndex = random.nextInt(rootNode.size());
+            JsonNode randomRecord = rootNode.get(randomIndex);
 
-            if (latestRecord != null) {
-                latestRecordMap = new HashMap<>();
-                Iterator<String> fields = latestRecord.fieldNames();
-                while (fields.hasNext()) {
-                    String field = fields.next();
-                    latestRecordMap.put(field, latestRecord.get(field).asText());
-                }
+            latestRecordMap = new HashMap<>();
+            Iterator<String> fields = randomRecord.fieldNames();
+            while (fields.hasNext()) {
+                String field = fields.next();
+                latestRecordMap.put(field, randomRecord.get(field).asText());
             }
 
         } catch (Exception e) {

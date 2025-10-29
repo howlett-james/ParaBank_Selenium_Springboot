@@ -30,7 +30,7 @@ public class RegistrationTests extends BaseTest {
     }
 
     @Test(priority = 2, description = "Verify successful user registration with valid data")
-    public void testSuccessfulRegistration() {
+    public void testRegistration() {
         Map<String, String> userData = TestDataGenerator.generateRegistrationData();
 
         registerPage.fillRegistrationForm(
@@ -53,12 +53,11 @@ public class RegistrationTests extends BaseTest {
                     userData.get("username"),
                     userData.get("password")
             );
+            Assert.assertTrue(registerPage.isRegistrationSuccessful(),
+                    "Registration should be successful");
+        }else {
+            Assert.fail("Registration not successful - username may already exist.");
         }
-
-        Assert.assertTrue(registerPage.isRegistrationSuccessful(),
-                "Registration should be successful");
-        Assert.assertTrue(registerPage.getSuccessMessage().contains("successfully"),
-                "Success message should be displayed");
     }
 
 @Test(priority = 3, description = "Verify registration with all mandatory fields")

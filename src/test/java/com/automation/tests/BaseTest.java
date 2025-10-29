@@ -69,11 +69,11 @@ public class BaseTest extends AbstractTestNGSpringContextTests {
                 return;
             }
 
-            Map<String, Object> latestUser = JsonReaderUtil.getLatestRecord(file);
+            Map<String, Object> randomUser = JsonReaderUtil.getRandomRecord(file);
 
-            if (latestUser != null && latestUser.containsKey("username") && latestUser.containsKey("password")) {
-                username = latestUser.get("username").toString();
-                password = latestUser.get("password").toString();
+            if (randomUser != null && randomUser.containsKey("username") && randomUser.containsKey("password")) {
+                username = randomUser.get("username").toString();
+                password = randomUser.get("password").toString();
                 System.out.println("[INFO] Loaded credentials from testdata.json: " + username);
             } else {
                 username = null;

@@ -85,10 +85,6 @@ public class RegisterPage extends BasePage {
         return false;
     }
 
-    public boolean isRegistrationUnsuccessful(){
-        return !(isElementDisplayed(errorMessage) && getText(errorMessage).contains("already exists"));
-    }
-
     public String getSuccessMessage() {
         return getText(successMessage);
     }
